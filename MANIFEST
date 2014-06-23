@@ -1,0 +1,9 @@
+Makefile.PL
+MANIFEST
+Changes
+t/01_load.t
+t/02_app.t
+t/98_pod.t
+lib/Test/WWW/Mechanize/PhantomJS/Catalyst.pm
+lib/WWW/Mechanize/PhantomJS/Catalyst.pm
+
