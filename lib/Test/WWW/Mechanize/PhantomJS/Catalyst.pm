@@ -16,9 +16,14 @@ $text =~ s/(WWW::Mechanize)/$1::PhantomJS::Catalyst/g;
 $text =~ s/sub\s+new/sub _new/;
 eval $text;
 die $@ if $@;
+undef $text;
+
+
+my $default_app;
+sub import { (undef, $default_app) = @_ }
 
 sub new {
-	my $self = shift->_new(@_);
+	my $self = shift->_new(app => $default_app, @_);
 	return UNIVERSAL::isa($self, 'Test::WWW::Mechanize::PhantomJS::Catalyst') ? $self : undef;
 };
 
@@ -41,8 +46,8 @@ the full description.
 =head1 SYNOPSIS
 
   use Test::More;
-  use Test::WWW::Mechanize::PhantomJS::Catalyst;
-  ok( my $mech = Test::WWW::Mechanize::PhantomJS::Catalyst->new(app => 'MyApp'), "Mechanize object ok");
+  use Test::WWW::Mechanize::PhantomJS::Catalyst 'MyApp';
+  ok( my $mech = Test::WWW::Mechanize::PhantomJS::Catalyst->new, "Mechanize object ok");
   $mech->get_ok("/hello.html");
 
 =head1 AUTHOR

@@ -30,10 +30,9 @@ package Test;
 use strict;
 use warnings;
 use Test::More tests => 3;
-use Test::WWW::Mechanize::PhantomJS::Catalyst;
+use Test::WWW::Mechanize::PhantomJS::Catalyst 'TestApp';
 
 my $mech = Test::WWW::Mechanize::PhantomJS::Catalyst->new(
-	app   => 'TestApp',
 	debug => 0,
 );
 ok( $mech, 'Created mechanize object' );
