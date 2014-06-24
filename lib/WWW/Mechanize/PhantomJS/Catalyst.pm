@@ -150,7 +150,7 @@ WWW::Mechanize::PhantomJS::Catalyst - mechanize javascript in your catalyst apps
 
 =head1 DESCRIPTION
 
-A mix of L<WWW::Mechanize::Catalyst> and L<WWW::Mechanize::PhantomJS>, exposed a
+A mix of L<WWW::Mechanize::Catalyst> and L<WWW::Mechanize::PhantomJS>, exposes a
 WWW::Mechanize API for driving a catalyst server running in the background by PhantomJS/GhostDriver.
 
 =head1 SYNOPSIS

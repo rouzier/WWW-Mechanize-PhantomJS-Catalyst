@@ -1,17 +1,22 @@
 NAME
     WWW::Mechanize::PhantomJS::Catalyst - mechanize javascript in your
-    catalyst apps
+    catalyst apps and tests
 
 DESCRIPTION
-    A mix of WWW::Mechanize::Catalyst and WWW::Mechanize::PhantomJS, exposed
-    a WWW::Mechanize API for driving a catalyst server running in the
-    background by PhantomJS/GhostDriver.
+    WWW::Mechanize for Catalyst apps with javascript. 
 
 SYNOPSIS
 
-      use WWW::Mechanize::PhantomJS::Catalyst;
-      my $mech = WWW::Mechanize::PhantomJS::Catalyst->new(app => 'MyApp');
-      $mech->get("/hello.html");
+    # driving
+    use WWW::Mechanize::PhantomJS::Catalyst;
+    my $mech = WWW::Mechanize::PhantomJS::Catalyst->new(app => 'MyApp');
+    $mech->get("/hello.html");
+ 
+    # testing 
+    use Test::More;
+    use Test::WWW::Mechanize::PhantomJS::Catalyst;
+    ok( my $mech = Test::WWW::Mechanize::PhantomJS::Catalyst->new(app => 'MyApp'), "Mechanize object ok");
+    $mech->get_ok("/hello.html");
 
 PREREQUISITES
     You'll need PhantomJS v1.9+, and WWW::Mechanize::PhantomJS from here:
