@@ -161,8 +161,11 @@ WWW::Mechanize API for driving a catalyst server running in the background by Ph
 
 =head1 PREREQUISITES
 
-You'll need PhantomJS v1.9+, and WWW::Mechanize::PhantomJS from here: L<https://github.com/dk/www-mechanize-phantomjs>
-( or v0.04 from the official distro when pull requests from github will be incorporated and published).
+You'll need PhantomJS v1.9+, and WWW::Mechanize::PhantomJS from here:
+L<https://github.com/dk/www-mechanize-phantomjs> ( or v0.04 from the official
+distro when pull requests from github will be incorporated and published).  The
+same is also for valid the latest Selenium::Remote::Driver
+(https://github.com/dk/Selenium-Remote-Driver or 0.2002 when out)
 
 =head1 AUTHOR
 
