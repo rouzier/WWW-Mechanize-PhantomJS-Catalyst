@@ -52,6 +52,7 @@ sub DESTROY
 {
     my ($self) = @_;
     if ($self->server_pid) {
+        local $?;
         print STDERR "[$$] Waiting for Catalyst server [", $self->server_pid, "] to finish..\n" if $self->debug;
         kill 2, $self->server_pid;
         local $SIG{PIPE} = 'IGNORE';
