@@ -23,7 +23,11 @@ my $default_app;
 sub import { (undef, $default_app) = @_ }
 
 sub new {
-	my $self = shift->_new(app => $default_app, @_);
+	my $self = shift->_new(
+		app              => $default_app,
+		report_js_errors => 1,
+		@_
+	);
 	return UNIVERSAL::isa($self, 'Test::WWW::Mechanize::PhantomJS::Catalyst') ? $self : undef;
 };
 
