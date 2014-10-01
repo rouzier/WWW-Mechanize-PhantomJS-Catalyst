@@ -39,6 +39,15 @@ x()
 HTML
 }
 
+sub escape
+{
+	my $s = shift;
+	$s =~ s/(\\)/\\$1/g;
+	$s =~ s/(\n)/\\n/g;
+	$s =~ s/(\r)//g;
+	return $s;
+}
+
 sub form: Path('form.html')
 {
 	my ( $self, $c) = @_;
@@ -46,7 +55,7 @@ sub form: Path('form.html')
 		$c->response->body(<<'HTML');
 <html><body><form method="post" action="form.html">
 <input type="hidden"   name="a" value="a">
-<input type="text"     name="b" value="b">
+<textarea name="b">b</textarea>
 <input type="checkbox" name="c">
 <input type="checkbox" name="d" value="d">
 <input type="checkbox" name="e" value="e">
@@ -58,7 +67,7 @@ sub form: Path('form.html')
 HTML
 	} else {
 		my $p = $c->req->parameters;
-		my $text = join(',', map { "'$_':'$$p{$_}'" } keys %$p);
+		my $text = join(',', map { "'$_':'".escape($$p{$_})."'" } keys %$p);
 		$c->response->body("<html><body>$text</body></text>");
 	}
 }
@@ -73,6 +82,14 @@ use warnings;
 use Test::More tests => 9;
 use Test::WWW::Mechanize::PhantomJS::Catalyst 'TestApp';
 
+sub unescape
+{
+	my $s = shift;
+	$s =~ s/\\n/\n/g;
+	$s =~ s/\\\\/\\/g;
+	return $s;
+}
+
 my $mech = Test::WWW::Mechanize::PhantomJS::Catalyst->new(
 	debug => 0,
 	report_js_errors => 0,
@@ -86,15 +103,14 @@ ok( 1 == $mech->js_errors, "JS failed as expected");
 
 $mech->get_ok("/form.html", "Form served ok");
 $mech->submit_form_ok({with_fields=>{
-	a => 'A',
-	b => 'B',
+	a => 'A\\',
+	b => "B\n2",
 	c => 1,
 	d => 1,
 	g => 0,
 }, button => 'submit2'}, 'Form submitted ok');
 my $content = $mech->content;
 $content =~ s/(<.*?>|')//g;
-my %p = map { split ':', $_ } split ',', $content;
-# use Data::Dumper; print STDERR Dumper( \%p);
+my %p = map { split ':', unescape($_) } split ',', $content;
 ok(6 == keys %p, "6 params found");
-ok($p{a} eq 'A' && $p{b} eq 'B' && $p{c} eq 'on' && $p{d} eq 'd' && $p{f} eq 'f', "all params correct");
+ok($p{a} eq 'A\\' && $p{b} eq "B\n2" && $p{c} eq 'on' && $p{d} eq 'd' && $p{f} eq 'f', "all params correct");
