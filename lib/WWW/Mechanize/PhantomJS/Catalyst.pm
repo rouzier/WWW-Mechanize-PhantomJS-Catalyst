@@ -4,6 +4,7 @@ use 5.10.0;
 use Moose;
 use IO::Socket::INET;
 use Catalyst::EngineLoader;
+use HTTP::Server::PSGI;
 
 extends 'WWW::Mechanize::PhantomJS' => { -version => 0.03 };
 
@@ -63,12 +64,12 @@ sub DESTROY
 
 sub test_port {
     my ($port) = @_;
-    return IO::Socket::INET->new(
+    IO::Socket::INET->new(
         Listen    => 5,
         Proto     => 'tcp',
         Reuse     => 1,
         LocalPort => $port
-    ) ? 1 : 0;
+    );
 }
 
 sub start_catalyst_server {
@@ -113,21 +114,31 @@ sub start_catalyst_server {
             }
         };
 
+        # avoid race condition between testing and using port
+        my $socket;
+        my $hsp_sl = \&HTTP::Server::PSGI::setup_listener;
+        my $new_hsp_sl = sub {
+            my $self = shift;
+            $self->{listen_sock} = $socket;
+            return $hsp_sl->($self,@_);
+        };
+
         {
             no warnings 'redefine';
             *Catalyst::Script::Server::_plack_loader_args = $new_css_pla;
             *Catalyst::Script::Server::_run_application   = $new_css_run; 
+            *HTTP::Server::PSGI::setup_listener           = $new_hsp_sl;
         }
 
         my ($port, $catalyst) = (4000);
         while (1) {
-            $port++, next unless test_port($port);
+            $port++, next unless $socket = test_port($port);
             print STDERR "[$$] Starting Catalyst server on port $port..\n" if $self->debug;
             print "$port\n";
             @ARGV = ('-p', $port);
             Catalyst::ScriptRunner->run($self->app, 'Server');
-	    print STDERR "[$$] Catalyst server exited early, aborting\n" if $self->debug;
-	    print "fail\n";
+            print STDERR "[$$] Catalyst server exited early, aborting\n" if $self->debug;
+            print "fail\n";
             exit 0;
         }
     }
