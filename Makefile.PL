@@ -6,6 +6,7 @@ WriteMakefile(
 	VERSION_FROM  => 'lib/WWW/Mechanize/PhantomJS/Catalyst.pm',
 	PREREQ_PM     => { 
 		Catalyst                    => '5.9', 
+		'Catalyst::Plugin::Server'  => 0, 
 		'WWW::Mechanize::PhantomJS' => '0.03',
 		'Test::WWW::Mechanize'      => 0,
 	},
