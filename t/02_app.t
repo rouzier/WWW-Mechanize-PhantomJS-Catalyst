@@ -11,6 +11,7 @@ __PACKAGE__->config->{namespace} = '';
 sub test :Path('test.html')
 {
 	my ( $self, $c) = @_;
+	$c->response->header('Content-Type' => 'text/html');
 	$c->response->body(<<'HTML');
 <html><body>
 <div id="foo">no</div>
@@ -25,6 +26,7 @@ HTML
 sub error :Path('error.html')
 {
 	my ( $self, $c) = @_;
+	$c->response->header('Content-Type' => 'text/html');
 	$c->response->body(<<'HTML');
 <html><body>
 <script type="text/javascript">
@@ -51,6 +53,7 @@ sub escape
 sub form: Path('form.html')
 {
 	my ( $self, $c) = @_;
+	$c->response->header('Content-Type' => 'text/html');
 	if ( $c->request->method eq 'GET') {
 		$c->response->body(<<'HTML');
 <html><body><form method="post" action="form.html">
