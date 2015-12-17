@@ -55,7 +55,7 @@ sub DESTROY
     if ($self->server_pid) {
         local $?;
         print STDERR "[$$] Waiting for Catalyst server [", $self->server_pid, "] to finish..\n" if $self->debug;
-        kill 2, $self->server_pid;
+        kill 15, $self->server_pid;
         local $SIG{PIPE} = 'IGNORE';
         close $self->server;
     }
