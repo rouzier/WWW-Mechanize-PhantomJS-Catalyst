@@ -8,7 +8,7 @@ use HTTP::Server::PSGI;
 
 extends 'WWW::Mechanize::PhantomJS' => { -version => 0.03 };
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 has app => (
     is       => 'ro',
