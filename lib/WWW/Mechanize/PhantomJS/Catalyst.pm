@@ -88,6 +88,7 @@ sub start_catalyst_server {
     else {
         require Catalyst::ScriptRunner;
         require Catalyst::Script::Server;
+        require HTTP::Server::PSGI;
         
         my $css_pla = \&Catalyst::Script::Server::_plack_loader_args;
         my $new_css_pla = sub {
